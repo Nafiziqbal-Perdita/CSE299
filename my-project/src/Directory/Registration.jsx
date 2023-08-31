@@ -7,6 +7,7 @@ export default function Registration() {
 
   const [go, setGo] = useState(false);
 
+  //if signed in then it will navigate to the home directory
   const checked = async () => {
     await registerWithMailPass();
     const user = auth.currentUser;

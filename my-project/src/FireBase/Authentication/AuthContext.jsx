@@ -4,7 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { Navigate } from "react-router-dom";
+
 const AuthContext = React.createContext();
 
 export const useAuth = () => {
@@ -13,10 +13,10 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   //states
-  const [navigate,setNavigate]=useState(false);
+
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const [curUid, setCurUid] = useState("");//checking the current user id for future safety
+  
 
   //functions
   //Registration a user using email and password
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
 
       const user = userCredential.user;
       setCurUid(user.uid);
-      setNavigate(true);
+  
       console.log("Login Method Succeed");
     } catch (error) {
       console.log("Login Method failed");
@@ -70,14 +70,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("CurId:" + curUid);
 
-  //   setNavigate(true);
-
-
-  // }, [curUid]);
-
+  
 
   
 
@@ -92,7 +86,7 @@ export const AuthProvider = ({ children }) => {
     setEmail,
     pass,
     setPass,
-    navigate
+  
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

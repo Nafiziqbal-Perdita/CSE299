@@ -16,9 +16,7 @@ const LogIn = () => {
     }
   };
 
-//   setTimeout(() => {
-//     call();
-//   }, 1000);
+
 
   useEffect(() => {
     const user = auth.currentUser;
