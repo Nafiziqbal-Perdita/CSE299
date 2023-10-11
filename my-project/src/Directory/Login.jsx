@@ -3,7 +3,7 @@ import { useAuth } from "../FireBase/Authentication/AuthContext";
 import { auth } from "../FireBase/FireComp";
 import { useEffect, useState } from "react";
 const LogIn = () => {
-  const { signInwithMailPass, setEmail,  setPass } = useAuth();
+  const { signInwithMailPass, setEmail, setPass,setUserid,userid } = useAuth();
 
   const [go, setGo] = useState(false);
 
@@ -13,10 +13,9 @@ const LogIn = () => {
     console.log(user);
     if (user) {
       setGo(true);
+      setUserid(user.uid);
     }
   };
-
-
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -24,14 +23,15 @@ const LogIn = () => {
     console.log(user);
     if (user) {
       setGo(true);
+      setUserid(user.uid);
     }
-
   });
 
   console.log(go);
+  console.log('current',userid);
 
   if (go) {
-    return <Navigate to="/" />;
+    return <Navigate to="/Wrap"   />;
   }
 
   return (
