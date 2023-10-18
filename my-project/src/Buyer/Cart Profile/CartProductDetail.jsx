@@ -54,6 +54,7 @@ const CartProductDetails = () => {
                 <img
 
                     className=" h-28 "
+                    src={product_image}
 
 
                 />

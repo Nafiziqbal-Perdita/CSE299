@@ -28,13 +28,15 @@ const Details = () => {
       product_desc: desc,
       buyer_id: buyerId,
       inStock: avail,
+      quantity: 1,
     };
 
-    await cartManager.addToCart(newCart);
+    await cartManager.addToCart(newCart,buyerId);
     // console.log("Cart added in the data base");
 
     navigate("/Buyer");
   };
+  console.log(image);
 
   return (
     <>
@@ -57,24 +59,14 @@ const Details = () => {
         Add To Cart
       </button>
 
+      <hr />
+      <hr />
+      <hr />
+      <hr />
 
-<hr />
-<hr />
-<hr />
-<hr />
-
-<div>
-
-    <MainComment/>
-</div>
-
-
-
-
-
-
-
-
+      <div>
+        <MainComment product_id={id} />
+      </div>
     </>
   );
 };

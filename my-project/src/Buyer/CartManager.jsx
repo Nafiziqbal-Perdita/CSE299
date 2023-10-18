@@ -1,11 +1,11 @@
-import { getDatabase, ref, push, get, remove } from "firebase/database";
+import { getDatabase, ref, push, get, remove, update } from "firebase/database";
 
 class CartManager {
 
 
 
   //addition of a collection in to the database
-  addToCart = async (newCart) => {
+  addToCart = async (newCart, user) => {
     let isAdded = false;
 
     // Initialize Firebase database
@@ -38,7 +38,10 @@ class CartManager {
             console.log("In condition product id", cartItem.product_id);
             console.log("In condition NewCart id", newCart.product_id);
 
-            isAdded = true;
+            if (cartItem.buyer_id === user) {
+              isAdded = true;
+            }
+
           }
         }
       }
@@ -60,6 +63,35 @@ class CartManager {
       console.error("Error adding data: ", error);
     }
   };
+
+  //update a value of the cart data
+
+
+
+
+
+
+  updateCartQuan = async (obj, path) => {
+
+    const pathToData = `myCart/${path}`;
+
+
+
+    const db = getDatabase();
+    const dbRef = ref(db, pathToData);
+
+    update(dbRef, obj).then(() => {
+      console.log('Data updated successfully');
+    }).catch((error) => {
+      console.error('Error updating data: ', error);
+    });
+
+
+
+  }
+
+
+
 
 
 

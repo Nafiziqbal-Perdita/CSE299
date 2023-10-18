@@ -11,12 +11,13 @@ const Comment = ({
     const [input, setInput] = useState("");
     const [editMode, setEditMode] = useState(false);
     const [showInput, setShowInput] = useState(false);
-    const [expand, setExpand] = useState(false);
+    const [expand, setExpand] = useState(true);
     const inputRef = useRef(null);
 
     useEffect(() => {
         inputRef?.current?.focus();
     }, [editMode]);
+    useEffect(() => { }, [comment]);
 
     const handleNewComment = () => {
         setExpand(!expand);
@@ -39,6 +40,10 @@ const Comment = ({
     const handleDelete = () => {
         handleDeleteNode(comment.id);
     };
+
+
+    console.log('In the Ui:', comment);
+
 
     return (
         <div>

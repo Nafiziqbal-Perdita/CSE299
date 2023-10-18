@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import shoppingCart from "../../assets/shopping-cart.png";
 import { getDatabase, ref, push, get } from "firebase/database";
 import CartManager from "../CartManager";
+import { useAuth } from "../../FireBase/Authentication/AuthContext";
 
 const Product = ({
   id,
@@ -16,11 +17,25 @@ const Product = ({
 }) => {
   // states
   const [isAvail, setIsAvail] = useState(false);
-  const [isAdded, setIsAdded] = useState(false);
+  const [checked, setChecked] = useState(false);
   const [colKey, setColKey] = useState(null);
   const [refresh, setRefresh] = useState(0);
+  const [staticQuantity,setStaticQuantity]=useState(1);
 
   const cartManager = new CartManager();
+  //by the help context api getting the current user
+  const { getCurrentUser, userid } = useAuth();
+
+
+  useEffect(() => {
+
+
+    getCurrentUser();
+
+    console.log(userid);
+
+  }, []);
+
 
   //useEffect
   useEffect(() => {
@@ -29,6 +44,8 @@ const Product = ({
     }
     checkCartList();
   }, [refresh]); // Make sure 'refresh' is in the dependency array
+
+
 
   const navigate = useNavigate(); // Use useNavigate here
 
@@ -72,27 +89,30 @@ const Product = ({
         if (cartData.hasOwnProperty(key)) {
           const cartItem = cartData[key];
 
-          if (cartItem.product_id === id) {
-            setIsAdded(true);
+          if (cartItem.buyer_id === userid && cartItem.product_id === id) {
+
+            console.log(cartItem.product_name);
+            console.log(cartItem.buyer_id);
+            setChecked(true);
+            // setIsAdded(true);
             setColKey(key);
           }
         }
       }
     }
   };
-  
+
 
   //remove the cart
-
   const removeTheCart = async (key) => {
     console.log("In remove function");
     await cartManager.deleteFromCart(key);
     setRefresh(refresh + 1);
-    setIsAdded(false);
+    setChecked(false);
   };
 
   const addInCart = async () => {
-    if (isAdded) {
+    if (checked) {
       console.log("Already in Cart now it will be removed");
 
       removeTheCart(colKey);
@@ -109,9 +129,10 @@ const Product = ({
       product_desc: desc,
       buyer_id: buyerId,
       inStock: avail,
+      quantity: staticQuantity,
     };
 
-    const add = await cartManager.addToCart(myCart);
+    const add = await cartManager.addToCart(myCart,userid);
     setRefresh(refresh + 1);
   };
 
@@ -124,15 +145,14 @@ const Product = ({
 
         <ul>
           <div
-            className={` ${
-              isAdded ? "bg-yellow-300" : "bg-white"
-            } w-fit m-2 p-1 cursor-pointer`}
+            className={` ${checked ? "bg-yellow-300" : "bg-white"
+              } w-fit m-2 p-1 cursor-pointer`}
             onClick={addInCart}
           >
             <img className="h-5  " src={shoppingCart} alt="Cart" />
           </div>
         </ul>
-        <ul>{isAdded}</ul>
+        <ul>{checked}</ul>
 
         <ul className="bg-slate-50 px-1 rounded-md">Name: {name}</ul>
         <ul className="bg-slate-100 px-1 rounded-md">Price: {price}</ul>
