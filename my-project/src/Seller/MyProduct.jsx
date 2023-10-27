@@ -61,18 +61,9 @@ const MyProduct = () => {
     }
   };
 
-  if (home) {
-    return <Navigate to="/Seller" />;
-  }
-
   return (
     <>
-      <header className="bg-slate-300 h-12 flex items-center justify-center text-lg font-bold">
-        My Products
-        {userid}
-      </header>
-
-      <div className="flex h-11 items-center justify-center">
+      {/* <div className="flex h-11 items-center justify-center">
         <button
           className="bg-blue-400 m-2 py-1 px-2 rounded-md text-yellow-50 font-bold"
           onClick={(e) => {
@@ -81,7 +72,7 @@ const MyProduct = () => {
         >
           Home
         </button>
-      </div>
+      </div> */}
 
       <div className="bg-slate-100 h-full flex">
         {/* the data is filtered by the current user id because here those items will be provided that what is created by the current user  */}
@@ -98,8 +89,9 @@ const MyProduct = () => {
               name={item.product_name}
               price={item.price}
               stock={item.stock}
+              category={item.category}
               deleteEvent={deleteDocument}
-           />
+            />
           ))}
       </div>
     </>

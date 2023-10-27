@@ -3,6 +3,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getDatabase, ref, push, get, remove } from "firebase/database";
 import CartManager from "../CartManager";
 import Cart from "./Cart";
+
+import backIcon from "../../assets/back.png";
+
+
 const Carts = () => {
     // states
     const [data, setData] = useState([]);
@@ -18,48 +22,25 @@ const Carts = () => {
 
     //useEffect
     useEffect(() => {
-
         const callMan = async () => {
-
             await getTheCarts();
-
-
-        }
+        };
         callMan();
-
-
-
-
     }, [refresh]);
 
     useEffect(() => {
         calculatePrice();
     }, [data]);
 
-
-
     const removeItem = async (path) => {
-
-
         await cartManager.deleteFromCart(path);
         setRefresh(!refresh);
         //when the function will call the total carts will get updated
 
         getUpdate();
-
-
-
-    }
-
-
-
-
+    };
 
     //function to trim the characters except the number characters
-
-
-
-
 
     function findLongestConsecutiveNumber(inputString) {
         const matches = inputString.match(/\d+/g); // Match sequences of digits
@@ -68,11 +49,11 @@ const Carts = () => {
             return null; // No number sequences found
         }
 
-        let longestSequence = '';
-        let currentSequence = '';
+        let longestSequence = "";
+        let currentSequence = "";
 
         for (const match of matches) {
-            if (currentSequence === '') {
+            if (currentSequence === "") {
                 currentSequence = match;
             } else {
                 const currentNum = parseInt(match, 10);
@@ -96,16 +77,11 @@ const Carts = () => {
 
         const result = parseInt(longestSequence, 10);
         return isNaN(result) ? 0 : result;
-
     }
-
-
 
     // calculating the total price of the products
 
-
     const calculatePrice = () => {
-
         let sum = 0;
 
         data.map((d) => {
@@ -114,35 +90,17 @@ const Carts = () => {
             // const getPrice = extractNumbersFromString(d.product_price);
             const getPrice = findLongestConsecutiveNumber(d.product_price);
             console.log(getPrice);
-            const subTotal = (d.quantity * getPrice);
+            const subTotal = d.quantity * getPrice;
             console.log(subTotal);
             sum += subTotal;
-
-
-
-
-        })
+        });
 
         setTotalPrice(sum);
-
-
-
-    }
-
-
-
+    };
 
     const getUpdate = () => {
-
         setRefresh(!refresh);
-
-    }
-
-
-
-
-
-
+    };
 
     // Initialize Firebase database
     const db = getDatabase();
@@ -172,7 +130,6 @@ const Carts = () => {
                         // Add the key and count to the cartItem before pushing to myData
                         cartItem.key = key; // Add the key
 
-
                         myData.push(cartItem);
                     }
                 }
@@ -183,7 +140,6 @@ const Carts = () => {
 
         setData(myData);
         // console.log(myData);
-
     };
 
     console.log("State data");
@@ -191,31 +147,26 @@ const Carts = () => {
 
     return (
         <>
-            <div>Carts Profile</div>
-            {userid}
+            <div className="bg-gray-100 m-1 p-2 rounded-lg shadow-md flex items-center space-x-2 ">
+                <img
+                    src={backIcon}
+                    alt=""
+                    className="h-10 hover:scale-90 hover:duration-300"
+                    onClick={() => {
+                        navigate("/Buyer");
+
+                    }}
+
+                />
+                <label className=" font-sherif text-lg ">back to Home</label>
+            </div>
 
 
-            <div
-
-                onClick={() => {
-                    navigate("/Buyer");
-
-                }}
-
-            >Home</div>
-
-
-
-            <div className="flex flex-wrap" >
-
-
-                {
-                    data.map((d) => {
-
-
-                        return <Cart
+            <div className="flex flex-wrap space-y-2  justify-center m-2 p-2 ">
+                {data.map((d) => {
+                    return (
+                        <Cart
                             key={Math.random()}
-
                             buyer_id={d.buyer_id}
                             creator_id={d.creator_id}
                             inStock={d.inStock}
@@ -227,36 +178,18 @@ const Carts = () => {
                             quantity={d.quantity}
                             path={d.key}
                             removeItem={removeItem}
-
                             //update the carts when the function is called
                             update={getUpdate}
-
-
-                        />;
-
-
-                    })
-                }
-
+                        />
+                    );
+                })}
             </div>
 
-
-
             <div className="bg-slate-200 m-4 h-14 rounded-md flex items-center justify-center ">
-                <span className="p-2 bg-orange-100 font-bold text-lg" >
+                <span className="p-2 bg-orange-100 font-bold text-lg">
                     Total Price: {totalPrice} tk
                 </span>
             </div>
-
-
-
-
-
-
-
-
-
-
         </>
     );
 };

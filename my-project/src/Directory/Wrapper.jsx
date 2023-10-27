@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../FireBase/Authentication/AuthContext";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { auth } from "../FireBase/FireComp";
+import { BounceLoader } from "react-spinners";
 const Wrapper = () => {
   //Auth Provider
   const { signOut, userid, getCurrentUser } = useAuth();
@@ -9,36 +11,66 @@ const Wrapper = () => {
   const [data, setData] = useState([]);
   const [type, setType] = useState({});
 
-  
+
+
+
+
+  const nowType = (data) => {
+
+    const myUser = auth.currentUser.uid;
+
+
+
+    console.log("in the type", data);
+
+    console.log("in the type user", myUser);
+
+    data.forEach((doc) => {
+
+      if (myUser === doc.id) {
+        console.log('Got id');
+        // console.log(doc.id);
+        console.log(doc.type);
+
+        goNavigate(doc.type);
+
+      }
+
+    })
+
+
+
+
+
+
+
+  }
+
+
 
   const fetchData = async () => {
     const db = getFirestore();
     try {
       const querySnapshot = await getDocs(collection(db, "users"));
-      const fetchedData = [];
+      const userData = [];
 
       querySnapshot.forEach((doc) => {
-        fetchedData.push({
+        userData.push({
           id: doc.id,
           ...doc.data(),
         });
+      }
 
-        // console.log(doc.id);
-        console.log(doc.data());
+      );
 
-        if (doc.id === userid) {
-          setType(doc.data());
-        }
-      });
+      await nowType(userData);
 
-      setData(fetchedData);
+      setData(userData);
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
   };
 
-  console.log(data);
-  console.log(type);
 
   const callEveryOne = () => {
     (async () => {
@@ -56,23 +88,42 @@ const Wrapper = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+
+
+
+  const navigate = useNavigate();
+
+  const goNavigate = (type) => {
+
+
+    if (type === 'seller') {
+      navigate('/Seller');
+    } else {
+      navigate('/Buyer');
+    }
+
+
+
+
+  }
+
+
+
+
+
+
+
   return (
     <>
-      <div>
-        This is Wrapper Class
-        <div>The id is: {userid}</div>
-      </div>
 
-      <div>The Database data is : {type.type}</div>
+      <div className="h-screen w-screen flex justify-center items-center">
 
-      {type.type === "seller" ? <Navigate to="/Seller" /> : "null"}
-      {type.type === "buyer" ? <Navigate to="/Buyer" /> : "null"}
-      {/* <button onClick={signOut}>LogOut</button> */}
 
-      <div className="bg-slate-500 h-32 flex justify-center items-center">
-        <label className="text-5xl font-extrabold text-yellow-50">
-          <span>Loading</span>
-        </label>
+        <div>
+          <BounceLoader color="#36d7b7" size={150} />
+        </div>
+
+
       </div>
     </>
   );

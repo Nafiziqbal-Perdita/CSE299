@@ -1,262 +1,259 @@
-
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   getFirestore,
   setDoc,
   doc,
   collection,
-  getDocs,
-  where,
+  updateDoc,
 } from "firebase/firestore";
-import { Navigate } from "react-router-dom";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { useAuth } from "../FireBase/Authentication/AuthContext";
-import { query } from "firebase/database";
+import { Navigate, useNavigate } from "react-router-dom";
+import ImageUpload from "./ImageUpload";
 
 const EditPost = () => {
   const location = useLocation();
-  const { image, name, price, stock, product_id, userid, detail } =
+
+  const { image, name, price, stock, product_id, userid, detail, category } =
     location.state;
 
-  // States
+  const navigate = useNavigate();
+
+  //initializing the class
+
+  const imageUpload = new ImageUpload();
+
+  // State management
   const [pname, setPname] = useState("");
-  const [pimage, setPimage] = useState("");
   const [pdesc, setPdesc] = useState("");
   const [pprice, setPprice] = useState("");
   const [pstock, setPstock] = useState(false);
-  const [product, setProduct] = useState("");
   const [error, setError] = useState("");
   const [go, setGo] = useState(false);
+  const [catagory, setCatagory] = useState("vegetables");
+  const [pimage, setPimage] = useState(image);
 
-  // States for image upload
+  //states for image upload
   const [file, setFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     setPname(name);
-    setPprice(price);
     setPdesc(detail);
+    setPprice(price);
     setPstock(stock);
-    setPimage(image);
-    setProduct(product_id);
-  }, [name, price, detail, stock, image, product_id]);
+    setCatagory(category);
+  }, []);
 
-  const { generateRandomNumber } = useAuth();
+  console.log(pname);
+  console.log(pdesc);
+  console.log(pprice);
+  console.log(pstock);
+  console.log(catagory);
+  console.log(product_id);
+  console.log(userid);
 
- 
-  
-  const uploadPhoto = async () => {
-    if (file != null) {
-      console.log("Start UPloading photo");
-      try {
-        const randomNumber = generateRandomNumber();
-        const storage = getStorage();
-        const storageRef = ref(storage, "images/" + randomNumber);
-  
-        const uploadTask = uploadBytesResumable(storageRef, file);
-  
-        // Listen to state changes, errors, and completion of the upload
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            // Handle upload progress if needed
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log(`Upload is ${progress}% done`);
-          },
-          (error) => {
-            // Handle errors during the upload
-            console.error("Error uploading file:", error);
-          },
-          async () => {
-            // Upload completed successfully, get the image URL
-            const imageUrl = await getDownloadURL(storageRef);
-            console.log("Image URL:", imageUrl);
-  
-            // Update the state with the new image URL
-            setPimage(imageUrl);
-  
-            // Call the function to upload other data
-            uploadData(imageUrl);
-          }
-        );
-      } catch (error) {
-        // Handle any exceptions that may occur
-        console.error("Error uploading file:", error);
-      }
-    } else {
-      // If no file is selected, just proceed with uploading other data
-      uploadData(image);
-    }
-  };
-  
-  const uploadData = async (urlOfimage) => {
+  const updateTheDocument = async (obj) => {
     // Now that you have the image URL, you can store it in Firestore
     const db = getFirestore();
-    const postsCollection = collection(db, "posts");
-  
+    const collectionName = "posts";
+    const documentId = product_id;
+
+    const docRef = doc(db, collectionName, documentId);
+
     try {
-      const querySnapshot = await getDocs(
-        query(
-          postsCollection,
-          where("creator_id", "==", userid),
-          where("id", "==", product_id)
-        )
-      );
-  
-      if (!querySnapshot.empty) {
-        const existingPost = querySnapshot.docs[0];
-  
-        // Update the state with the new data
-        setPname(name);
-        setPprice(price);
-        setPdesc(detail);
-        setPstock(stock);
-  
-        // Update the document in Firestore with the new data
-        await setDoc(existingPost.ref, {
-          image: urlOfimage,
-          product: existingPost.id,
-          creator_id: userid,
-          product_name: pname,
-          price: pprice,
-          description: pdesc,
-          stock: pstock,
-        });
-  
-        console.log("Document updated successfully.");
-        console.log("The Post id is:", existingPost.id);
-      } else {
-        setError("Can not change the Post");
-      }
-  
-      setGo(true);
+      await updateDoc(docRef, obj);
+      console.log("Document updated successfully");
     } catch (error) {
-      console.error("Error adding/updating document:", error);
-      setError("Error adding/updating document");
+      console.error("Error updating document: ", error);
     }
   };
-  
 
+  // Function to create a post
+  const updatePost = async (e) => {
+    e.preventDefault();
 
+    if (!pname) {
+      setError("Name Field Empty");
+      return;
+    }
 
+    if (!pprice) {
+      setError("Price Field Empty");
+      return;
+    }
 
-  const handleClick = async () => {
-    // Clear any previous error message
-    await uploadPhoto();
+    let updatedImage = pimage;
+
+    if (file != null) {
+      imageUpload
+        .uploadImage(file, (progress) => {
+          setUploadProgress(progress);
+          console.log(`Upload progress: ${progress}%`);
+        })
+        .then((downloadURL) => {
+          const idata = {
+            image: downloadURL,
+          };
+
+          const saveIt = async () => {
+            await updateTheDocument(idata);
+          };
+          saveIt();
+
+          console.log(`Image uploaded. Download URL: ${downloadURL}`);
+        })
+        .catch((error) => {
+          console.error("Error uploading image:", error);
+        });
+    }
+
+    console.log("Updated image");
+    console.log(updatedImage);
+
+    //The Updated data set
+    const updatedData = {
+      product_name: pname,
+      price: pprice,
+      description: pdesc,
+      category: catagory,
+      stock: pstock,
+    };
+
+    await updateTheDocument(updatedData);
+
+    navigate("/Seller");
   };
 
-  if (go) {
-    return <Navigate to="/MyProduct" />;
-  }
+  return (
+    <>
+      <div className=" h-screen  flex justify-center mt-20 ">
+        <form
+          action=""
+          className="flex flex-col justify-center items-center h-fit w-2/3 bg-slate-100  p-2 rounded-xl shadow-md "
+        >
+          <label className="text-xl font-bold mt-2 ">
+            Update Post
+            <hr />
+          </label>
 
+          <div className="h-5/6 w-5/6">
+            <input
+              className="p-2 w-2/3 mt-1 rounded-xl border"
+              type="text"
+              placeholder="Name "
+              value={pname}
+              onChange={(e) => {
+                setPname(e.target.value);
+              }}
+            />
+            <input
+              className="p-2 w-2/3 mt-8 rounded-xl border"
+              type="text"
+              placeholder="Price "
+              value={pprice}
+              onChange={(e) => {
+                setPprice(e.target.value);
+              }}
+            />
 
+            <div className="mt-4 ">
+              <div>
+                <label
+                  htmlFor=""
+                  className="text-slate-500 font-serif text-lg p-2 "
+                >
+                  Select Category:
+                </label>
+              </div>
 
+              <div>
+                <select
+                  className="p-2 w-2/5 rounded-xl border"
+                  value={catagory}
+                  onChange={(e) => {
+                    setCatagory(e.target.value);
+                  }}
+                >
+                  <option value="vegetables">Vegetables</option>
+                  <option value="fruits">Fruits</option>
+                  <option value="fish">Fish</option>
+                </select>
+              </div>
+            </div>
 
+            <div className="h-20">
+              <input
+                className="p-2 mt-2 rounded-xl border w-2/3 h-full "
+                type="text"
+                placeholder="Description"
+                value={pdesc}
+                onChange={(e) => {
+                  setPdesc(e.target.value);
+                }}
+              />
+            </div>
 
+            {/* toggle button for make the stock change */}
 
+            <div className="mt-5 ml-1">
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  value=""
+                  className="sr-only peer"
+                  checked={pstock} // Set the "checked" attribute based on the pstock variable
+                  disabled={!pstock} // Set the "disabled" attribute based on the inverse of the pstock variable
+                />
+                <div
+                  onClick={() => setPstock(!pstock)}
+                  className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+                ></div>
+                <span className="ml-3 text-md font-medium text-gray-900">
+                  {pstock ? "Available" : "Not Available"}
+                </span>
+              </label>
+            </div>
 
-
-    return (
-        <>
-            <>
-                <form className="space-y-4 m-10">
-                    <div>
-                        <img
-                            className="max-h-32 rounded-full border"
-                            src={pimage}
-                            alt={pname}
-                        />
-
-                        <div className="m-2">
-                            <input
-                                type="file"
-                                onChange={(e) => {
-                                    const theFile = e.target.files[0];
-                                    setFile(theFile);
-                                }}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="border space-x-2">
-                        <label>Product Name: </label>
-                        <input
-                            className="border border-black w-56"
-                            type="text"
-                            onChange={(e) => {
-                                setPname(e.target.value);
-                            }}
-                            value={pname}
-                        />
-                    </div>
-                    <div className="border space-x-2">
-                        <label>Product Description:</label>
-                        <input
-                            className="border border-black w-72"
-                            type="text"
-                            onChange={(e) => {
-                                setPdesc(e.target.value);
-                            }}
-                            value={pdesc}
-                        />
-                    </div>
-                    <div className="border space-x-2">
-                        <label>Product Price:</label>
-                        <input
-                            className="border border-black w-56"
-                            type="text"
-                            onChange={(e) => {
-                                setPprice(e.target.value);
-                            }}
-                            value={pprice}
-                        />
-                    </div>
-
-                    <div className="border space-x-2">
-                        <label>Product In Stock ?</label>
-
-                        <div className="flex flex-col items-start">
-                            <div>
-                                <input
-                                    type="radio"
-                                    // value={yes}
-
-                                    checked={pstock}
-                                    onChange={(e) => setPstock(!pstock)}
-                                />{" "}
-                                <label>Yes</label>
-                            </div>
-                            <div>
-                                <input
-                                    type="radio"
-                                    // value={no}
-                                    checked={!pstock}
-                                    onChange={(e) => setPstock(!pstock)}
-                                />{" "}
-                                <label>No</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <input
-                        type="button"
-                        value="Update"
-                        className="border w-16 rounded-md bg-blue-400 text-white"
-                        onClick={handleClick}
-                    />
-                </form>
-                <div>
-                    <p>{error}</p>
+            <div className="mt-6">
+              <input
+                type="file"
+                onChange={(e) => {
+                  const image = e.target.files[0];
+                  setFile(image);
+                }}
+              />
+              {uploadProgress > 0 && (
+                <div className="relative mt-2">
+                  <div className="h-2 w-full bg-gray-200 rounded-md">
+                    <div
+                      className="h-2 bg-blue-500 rounded-md"
+                      style={{ width: `${uploadProgress}%` }}
+                    ></div>
+                  </div>
+                  <p className="mt-2 text-sm text-gray-500">
+                    Upload Progress: {uploadProgress}%
+                  </p>
                 </div>
-            </>
-        </>
-    );
+              )}
+            </div>
+
+            <div className="mt-5 flex justify-center">
+              <button
+                className="bg-[#002D74] m-3  w-56 rounded-xl text-white py-2 hover:scale-105 duration-300"
+                onClick={updatePost}
+              >
+                Update
+              </button>
+            </div>
+
+            <div className="mt-2 flex justify-center">
+              <p>{error}</p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </>
+  );
 };
 
 export default EditPost;

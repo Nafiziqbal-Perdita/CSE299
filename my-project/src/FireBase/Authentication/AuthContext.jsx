@@ -48,6 +48,12 @@ export const AuthProvider = ({ children }) => {
   // login user using mail and password
 
   const signInwithMailPass = async () => {
+
+
+    console.log(email);
+    console.log(pass);
+
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,

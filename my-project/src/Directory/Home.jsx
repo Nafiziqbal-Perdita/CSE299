@@ -2,65 +2,46 @@ import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../FireBase/Authentication/AuthContext";
 import { auth } from "../FireBase/FireComp";
 import { useEffect, useState } from "react";
+import Wrapper from "./Wrapper";
+import LogIn from "./Login";
+import { onAuthStateChanged } from "firebase/auth";
 const Home = () => {
-  const { signOut } = useAuth();
   const [go, setGo] = useState(false);
-  const [userId, setUserId] = useState("");
 
   //checking the user is signed in or not if signed it then remain in Home directory or it will navigate to login directory
-
-  const checked = async () => {
-    await signOut();
-    const user = auth.currentUser;
-
-    console.log(user);
-    if (!user) {
+  // Create an observer to check the user's authentication state
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in.
+      // You can access user information using user (e.g., user.uid, user.displayName).
+      console.log("User is logged in:", user);
       setGo(true);
     } else {
-      setUserId(user.uid);
-    }
-  };
-
-  useEffect(() => {
-    const user = auth.currentUser;
-
-    console.log(user);
-    if (!user) {
-      setGo(true);
-    } else {
-      setUserId(user.uid);
+      // User is signed out.
+      console.log("User is logged out");
+      setGo(false);
     }
   });
 
-  console.log(go);
+  useEffect(() => {
+    // To stop observing the authentication state (e.g., when the component unmounts)
+    // Call this function to unsubscribe from the observer.
+    unsubscribe();
+  }, []);
 
   if (go) {
-    return <Navigate to="/Login" />;
+    return (
+      <>
+        <Wrapper />
+      </>
+    );
+  } else {
+    return (
+      <>
+        <LogIn />
+      </>
+    );
   }
-
-  return (
-    <>
-      <div className="flex flex-col justify-center items-center h-screen ">
-        <div className="text-2xl font-extrabold">This is Home</div>
-
-        <div className="m-2 p-2 bg-green-300">
-          <p>Currently logged in : {userId}</p>
-        </div>
-
-        <div className="m-2 p-2 bg-slate-200">
-          <Link to="/Login">Login</Link>
-        </div>
-
-        <div className="m-2 p-2 bg-slate-100">
-          <Link to="/SignUp">SignUp</Link>
-        </div>
-
-        <div className="m-2 bg-slate-300 p-2">
-          <button onClick={checked}>SignOut</button>
-        </div>
-      </div>
-    </>
-  );
 };
 
 export default Home;

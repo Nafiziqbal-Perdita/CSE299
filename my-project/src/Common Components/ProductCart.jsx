@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import EditIcon from '../assets/edit.png';
+import DeleteIcon from '../assets/delete.png';
 
 const ProductCart = ({
   image,
@@ -8,6 +10,7 @@ const ProductCart = ({
   product_id,
   userid,
   detail,
+  category,
   deleteEvent,
 }) => {
 
@@ -26,6 +29,7 @@ const ProductCart = ({
         product_id,
         userid,
         detail,
+        category
       },
     });
   };
@@ -37,39 +41,53 @@ const ProductCart = ({
 
   return (
     <>
-      <div className="bg-white h-72 w-52 m-4 p-2 flex flex-col justify-evenly  rounded-lg shadow-md ">
-        <div className="bg-gray-50 flex justify-center items-center  ">
-          <img className="h-20 p-1 rounded-full" src={image} alt={name} />
-        </div>
-        <div className="bg-gray-50">
-          <label>Name: {name} </label>
-        </div>
-        <div className="bg-gray-50">
-          <label>Price: {price} {product_id}  </label>
-        </div>
-        <div className="bg-gray-50">
-          <label>Stock: {stock ? "True" : "False"} </label>
-        </div>
-
-        <div className="bg-slate-200 flex justify-evenly">
-          <button
-            className="bg-blue-400 px-3 m-1 rounded-lg text-yellow-50 font-semibold"
-
-            onClick={handleEditClick}
+      <div
+        className={`m-4 p-2 rounded-xl shadow-md hover:scale-95 hover:duration-500 bg-white h-72 w-52 flex flex-col justify-evenly border-t-2 ${stock ? "border-green-500" : "border-red-400"
+          } hover:cursor-progress `}
 
 
-          >
-            Edit
+      >
+        <div className=" h-2/3 overflow-hidden">
+          <img className="h-full" src={image} alt={name} />
+        </div>
+
+        <div className="mt-2 bg-slate-50 rounded-sm ">
+          <label> {name} </label>
+        </div>
+
+        <div className="mt-2 bg-slate-50 rounded-sm ">
+          <label> {price} </label>
+        </div>
+
+        <div className=" m-2 p-1 flex justify-between ">
+
+          <button className="h-10  hover:scale-125 hover:duration-500  " onClick={handleEditClick} >
+
+
+            <img className="h-full" src={EditIcon} alt="Edit" />
+
+
           </button>
-          <button
-            className="bg-red-400 px-3 m-1 rounded-lg text-yellow-50 font-semibold"
-            onClick={() => {
-              return deleteEvent(product_id);
-            }}
+          <button className="h-10 hover:scale-125 hover:duration-500"
+          
+          onClick={() => {
+            return deleteEvent(product_id);
+          }}
+          
+          
           >
-            Delete
+
+            <img className="h-full" src={DeleteIcon} alt="Edit" />
+
+
+
+
           </button>
+
+
         </div>
+
+
       </div>
     </>
   );

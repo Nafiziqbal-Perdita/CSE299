@@ -1,15 +1,26 @@
 import { auth } from "../FireBase/FireComp";
 import { useAuth } from "../FireBase/Authentication/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import SellerBar from "./SellerBar";
+import MyProduct from "./MyProduct";
+import SellerHome from "./SellerHome";
+import Post from "./Post";
+import ChatHome from "../Chat Application/ChatHome";
 const Seller = () => {
   // state
   const [go, setGo] = useState(false);
   const [post, setPost] = useState(false);
   const [myproduct, setMyproduct] = useState(false);
+  const [currentPage, setCurrentPage] = useState("home");
 
   const { signOut, userid, getCurrentUser } = useAuth();
+
+  const navigate = useNavigate();
+
+  const changePage = (text) => {
+    setCurrentPage(text);
+  };
 
   //handleClick
 
@@ -20,45 +31,32 @@ const Seller = () => {
 
   const LogOut = async () => {
     signOut();
-    setGo(true);
+
+    navigate("/");
   };
 
   useEffect(() => {
     getCurrentUser();
   }, []);
 
-  if (go) {
-    return <Navigate to="/Login" />;
-  }
-  if (post) {
-    return <Navigate to="/Post" />;
-  }
-  if (myproduct) {
-    return <Navigate to="/MyProduct" />;
-  }
-
   return (
     <>
-      <div>This is Seller Account</div>
+      <div className="h-full overflow-hidden  bg-slate-50 ">
+        <SellerBar
+          currentPage={currentPage}
+          changePage={changePage}
+          LogOut={LogOut}
+        />
 
-      <div className="bg-slate-100 font-bold flex justify-center space-x-5 ">
-        <ul
-          onClick={() => {
-            setPost(!post);
-          }}
-        >
-          Create Post
-        </ul>
-        <ul
-          onClick={() => {
-            setMyproduct(!myproduct);
-          }}
-        >
-          My Products
-        </ul>
-        <ul>All</ul>
-        <ul>Id: {userid} </ul>
-        <ul onClick={LogOut}>LogOut</ul>
+        {currentPage === "myProduct" ? (
+          <MyProduct />
+        ) : currentPage === "createPost" ? (
+          <Post changePage={changePage} />
+        ) : currentPage === "chatRoom" ? (
+          <ChatHome />
+        ) : (
+          <SellerHome />
+        )}
       </div>
     </>
   );

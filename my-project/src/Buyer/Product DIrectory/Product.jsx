@@ -20,22 +20,17 @@ const Product = ({
   const [checked, setChecked] = useState(false);
   const [colKey, setColKey] = useState(null);
   const [refresh, setRefresh] = useState(0);
-  const [staticQuantity,setStaticQuantity]=useState(1);
+  const [staticQuantity, setStaticQuantity] = useState(1);
 
   const cartManager = new CartManager();
   //by the help context api getting the current user
   const { getCurrentUser, userid } = useAuth();
 
-
   useEffect(() => {
-
-
     getCurrentUser();
 
     console.log(userid);
-
   }, []);
-
 
   //useEffect
   useEffect(() => {
@@ -44,8 +39,6 @@ const Product = ({
     }
     checkCartList();
   }, [refresh]); // Make sure 'refresh' is in the dependency array
-
-
 
   const navigate = useNavigate(); // Use useNavigate here
 
@@ -90,7 +83,6 @@ const Product = ({
           const cartItem = cartData[key];
 
           if (cartItem.buyer_id === userid && cartItem.product_id === id) {
-
             console.log(cartItem.product_name);
             console.log(cartItem.buyer_id);
             setChecked(true);
@@ -101,7 +93,6 @@ const Product = ({
       }
     }
   };
-
 
   //remove the cart
   const removeTheCart = async (key) => {
@@ -132,41 +123,53 @@ const Product = ({
       quantity: staticQuantity,
     };
 
-    const add = await cartManager.addToCart(myCart,userid);
+    const add = await cartManager.addToCart(myCart, userid);
     setRefresh(refresh + 1);
   };
 
   return (
     <>
-      <div className="bg-blue-400  h-48 w-44 m-4 rounded-lg shadow-md px-2   flex flex-col justify-evenly">
-        <ul> {refresh} </ul>
-
-        <ul> {colKey} </ul>
-
-        <ul>
-          <div
-            className={` ${checked ? "bg-yellow-300" : "bg-white"
-              } w-fit m-2 p-1 cursor-pointer`}
-            onClick={addInCart}
-          >
-            <img className="h-5  " src={shoppingCart} alt="Cart" />
-          </div>
-        </ul>
-        <ul>{checked}</ul>
-
-        <ul className="bg-slate-50 px-1 rounded-md">Name: {name}</ul>
-        <ul className="bg-slate-100 px-1 rounded-md">Price: {price}</ul>
-        <ul className="bg-slate-200 px-1 rounded-md">
-          Available: {isAvail === true ? "Yes" : "No"}
-        </ul>
-
-        <button
-          className="bg-slate-50 rounded-md"
-          type="button"
-          onClick={handleDetails}
+      <div className=" relative ">
+        <div
+          className=" absolute left-3/4 top-48 h-10 w-10  "
+          onClick={addInCart}
         >
-          Details
-        </button>
+          <svg
+            className="h-full w-full rounded-md p-1 hover:scale-95 hover:duration-300  "
+            width="128"
+            height="128"
+            viewBox="0 0 16 16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill={`${checked ? "#22c55e" : "#eab308"}`}
+              d="M6 14.5a1.5 1.5 0 1 1-3.001-.001A1.5 1.5 0 0 1 6 14.5zm10 0a1.5 1.5 0 1 1-3.001-.001A1.5 1.5 0 0 1 16 14.5zM16 8V2H4a1 1 0 0 0-1-1H0v1h2l.751 6.438A2 2 0 0 0 4 12h12v-1H4a1 1 0 0 1-1-1v-.01L16 8z"
+            />
+          </svg>
+        </div>
+
+        <div
+          className={`m-4 p-2 rounded-xl  bg-white h-72 w-52 flex flex-col justify-evenly border-t-2 ${
+            avail ? "border-green-500" : "border-red-400"
+          } hover:cursor-progress `}
+
+
+          onClick={handleDetails}
+
+
+        >
+          <div className=" h-2/3 ">
+            <img src={image} alt={name} />
+          </div>
+
+          <div className="mt-2 bg-slate-50 rounded-sm ">
+            <label> {name} </label>
+          </div>
+
+          <div className="mt-2 bg-slate-50 rounded-sm ">
+            <label> {price} </label>
+          </div>
+        </div>
       </div>
     </>
   );
