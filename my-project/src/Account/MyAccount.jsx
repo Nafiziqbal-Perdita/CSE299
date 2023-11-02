@@ -96,6 +96,7 @@ const MyAccount = () => {
             setShowMessage(true);
         }
         setUpdate(false);
+        setEdit(false);
     };
 
     useEffect(() => {
@@ -326,7 +327,7 @@ const MyAccount = () => {
                                                             value={user.last_name}
                                                             onChange={(e) => {
                                                                 if (!edit) return;
-                                                             
+
                                                                 setUser({ ...user, last_name: e.target.value });
                                                             }}
                                                         />

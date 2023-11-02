@@ -5,13 +5,15 @@ import CartManager from "../CartManager";
 import backIcon from "../../assets/back.png";
 
 import MainComment from "../../Comment/MainComment";
+import chatClass from "../../Chat Application/chatClass";
+import { serverTimestamp } from "firebase/firestore";
 
 const Details = () => {
   const navigate = useNavigate();
-
+  const chat = new chatClass();
 
   const [tooltip, setTooltip] = useState(false);
-
+  const [send, setSend] = useState(false);
 
   const location = useLocation();
   const { id, name, price, desc, creator_id, avail, buyerId, image } =
@@ -44,6 +46,36 @@ const Details = () => {
   };
   console.log(image);
 
+  const createRoom = async (e) => {
+    e.preventDefault();
+    console.log("enter");
+
+    const fromName = await chat.findUserByUid(creator_id);
+    const toName = await chat.findUserByUid(buyerId);
+
+    console.log(fromName);
+    console.log(toName);
+
+    try {
+      const data = {
+        from: creator_id,
+        fromCount: true,
+        fromName,
+        to: buyerId,
+        toName,
+        toCount: false,
+        lastTime: serverTimestamp(),
+      };
+
+      setSend(true);
+      await chat.createRoomForChat(id, data);
+
+      console.log("sucessful");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="h-screen bg-slate-50">
@@ -74,6 +106,21 @@ const Details = () => {
 
           {/* right bar */}
           <div className=" h-full w-1/2  flex flex-col items-start justify-center space-y-5     ">
+            <div className="bg-slate-50 m-1 p-1 text-sm text-slate-500 rounded-sm">
+              <p>
+                Want to know more ?
+                <label
+                  className="text-lg text-green-600 font-serif font-semibold hover:text-red-500"
+                  onClick={(e) => {
+                    return createRoom(e);
+                  }}
+                >
+                  {send ? "Sent" : "Send"}
+                </label>{" "}
+                Message to the owner.
+              </p>
+            </div>
+
             <div className="bg-blue-100 py-1 px-3 w-full rounded-lg ">
               <span className=" text-3xl font-serif font-bold  ">{name}</span>
             </div>
@@ -88,31 +135,26 @@ const Details = () => {
               </p>
             </div>
 
-
-
-            <div className="py-1 px-1 h-14 hover:bg-slate-100 rounded-full relative "
-
-
+            <div
+              className="py-1 px-1 h-14 hover:bg-slate-100 rounded-full relative "
               onMouseEnter={() => {
                 setTooltip(true);
               }}
-
               onMouseLeave={() => {
                 setTooltip(false);
               }}
-
-
-             onClick={handleClick}
-
-
+              onClick={handleClick}
             >
-
               <div>
-                <label className={`${tooltip ? "absolute" : "hidden"} text-xs bottom-0 left-4 mt-1  font-serif font-medium text-slate-500`}
-
-                > Add in Cart </label>
+                <label
+                  className={`${
+                    tooltip ? "absolute" : "hidden"
+                  } text-xs bottom-0 left-4 mt-1  font-serif font-medium text-slate-500`}
+                >
+                  {" "}
+                  Add in Cart{" "}
+                </label>
               </div>
-
 
               <svg
                 className=" hover:scale-75 hover:duration-500  "

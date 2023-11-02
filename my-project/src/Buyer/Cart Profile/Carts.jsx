@@ -146,51 +146,116 @@ const Carts = () => {
     console.log(data);
 
     return (
-        <>
-            <div className="bg-gray-100 m-1 p-2 rounded-lg shadow-md flex items-center space-x-2 ">
-                <img
-                    src={backIcon}
-                    alt=""
-                    className="h-10 hover:scale-90 hover:duration-300"
-                    onClick={() => {
-                        navigate("/Buyer");
+        <div className="  items-center h-screen flex flex-col " >
 
-                    }}
+            <>
+                <div className="bg-gray-100 w-full m-1 p-2 rounded-lg shadow-md flex items-center space-x-2 ">
+                    <img
+                        src={backIcon}
+                        alt=""
+                        className="h-10 hover:scale-90 hover:duration-300"
+                        onClick={() => {
+                            navigate("/Buyer");
 
-                />
-                <label className=" font-sherif text-lg ">back to Home</label>
-            </div>
+                        }}
+
+                    />
+                    <label className=" font-sherif text-lg ">back to Home</label>
+                </div>
 
 
-            <div className="flex flex-wrap space-y-2  justify-center m-2 p-2 ">
-                {data.map((d) => {
-                    return (
-                        <Cart
-                            key={Math.random()}
-                            buyer_id={d.buyer_id}
-                            creator_id={d.creator_id}
-                            inStock={d.inStock}
-                            product_desc={d.product_desc}
-                            product_id={d.product_id}
-                            product_image={d.product_image}
-                            product_name={d.product_name}
-                            product_price={d.product_price}
-                            quantity={d.quantity}
-                            path={d.key}
-                            removeItem={removeItem}
-                            //update the carts when the function is called
-                            update={getUpdate}
-                        />
-                    );
-                })}
-            </div>
+                <div className="bg-transparent border shadow-md m-4 h-14 w-2/4 rounded-md flex items-center justify-evenly     ">
+                    <span className="p-2 m-2 bg-yellow-400 rounded-md shadow-md text-slate-50 font-bold text-lg  hover:bg-yellow-600 hover:animate-pulse  ">
+                        Total Price: {totalPrice} Tk
+                    </span>
 
-            <div className="bg-slate-200 m-4 h-14 rounded-md flex items-center justify-center ">
-                <span className="p-2 bg-orange-100 font-bold text-lg">
-                    Total Price: {totalPrice} tk
-                </span>
-            </div>
-        </>
+                    <span className="p-2 m-2  bg-green-400 font-bold rounded-md shadow-md text-lg   hover:bg-green-600 hover:scale-90 hover:animate-pulse hover:duration-500  ">
+
+
+                        <button className="text-slate-100 h-6 flex justify-evenly items-center"
+
+
+
+                            onClick={() => {
+
+
+                                navigate('/checkOut', {
+                                    state:{
+                                        data,
+                                        totalPrice
+                                    }
+                                } 
+                                
+                                
+                                
+                                );
+
+
+
+
+
+                            }}
+
+
+                        >
+
+
+                            <svg
+
+                                className="h-full"
+
+                                width="48" height="48" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                                <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12.91 5.5H1.09c-.56 0-.8-.61-.36-.9L6.64.73a.71.71 0 0 1 .72 0l5.91 3.87c.44.29.2.9-.36.9Z" />
+                                    <rect width="13" height="2.5" x=".5" y="11" rx=".5" />
+                                    <path d="M2 5.5V11m2.5-5.5V11M7 5.5V11m2.5-5.5V11M12 5.5V11" />
+                                </g>
+                            </svg>
+
+                            <span>
+                                Billing
+                            </span>
+
+                        </button>
+
+
+
+                    </span>
+
+                </div>
+
+
+
+                <div className="flex flex-wrap space-y-2  justify-center m-2 p-2 ">
+                    {data.map((d) => {
+                        return (
+                            <Cart
+                                key={Math.random()}
+                                buyer_id={d.buyer_id}
+                                creator_id={d.creator_id}
+                                inStock={d.inStock}
+                                product_desc={d.product_desc}
+                                product_id={d.product_id}
+                                product_image={d.product_image}
+                                product_name={d.product_name}
+                                product_price={d.product_price}
+                                quantity={d.quantity}
+                                path={d.key}
+                                removeItem={removeItem}
+                                //update the carts when the function is called
+                                update={getUpdate}
+                            />
+                        );
+                    })}
+                </div>
+
+
+            </>
+
+
+
+
+        </div>
     );
 };
 

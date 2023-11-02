@@ -16,6 +16,7 @@ import SellerProductDetail from "./Seller/SellerProductDetail";
 import ChatHome from "./Chat Application/ChatHome";
 import Messenger from "./Chat Application/Messenger";
 import MyAccount from "./Account/MyAccount";
+import CheckOut from "./Buyer/CheckOut/CheckOut";
 export default function App() {
   return (
     <>
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/chatRoom" element={<ChatHome />} />
           <Route path="/chat" element={<Messenger />} />
           <Route path="/account" element={<MyAccount />} />
+          <Route path="/checkOut" element={<CheckOut />} />
         </Routes>
       </Router>
     </>

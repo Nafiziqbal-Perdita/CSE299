@@ -9,10 +9,17 @@ import {
     where,
     query,
     orderBy,
+    setDoc,
 } from "firebase/firestore";
 
-import { getDatabase, ref, push, equalTo, get, orderByChild } from "firebase/database";
-
+import {
+    getDatabase,
+    ref,
+    push,
+    equalTo,
+    get,
+    orderByChild,
+} from "firebase/database";
 
 class chatClass {
     // Define any constructor if needed
@@ -58,7 +65,6 @@ class chatClass {
             });
     };
 
-
     //update room
 
     updateRoom = async (docId, data) => {
@@ -79,7 +85,6 @@ class chatClass {
     };
 
     //get room data by giving id
-
 
     getRoomDataById = async (docId) => {
         // Create a reference to your Firestore database
@@ -106,26 +111,16 @@ class chatClass {
         }
     };
 
-
-
-
-
-
-
-
     allTheTexts = async (value) => {
-
-
-
-
-
         const db = getFirestore();
         // const q = query(collection(db, "messages"), where("room", "==", value));
-        const q = query(collection(db, "messages"), where("room", "==", value), orderBy("time", "asc"));
+        const q = query(
+            collection(db, "messages"),
+            where("room", "==", value),
+            orderBy("time", "asc")
+        );
 
         const querySnapshot = await getDocs(q);
-
-
 
         const data = [];
         querySnapshot.forEach((doc) => {
@@ -137,11 +132,61 @@ class chatClass {
         });
 
         return data;
+    };
+
+    //create chat room
+
+    createRoomForChat = async (roomId, data) => {
+        const db = getFirestore();
+
+        const room = doc(db, "chatRoom", roomId);
+
+        setDoc(room, data)
+            .then(() => {
+                console.log("Room Created");
+            })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+            });
+    };
 
 
 
 
-    }
+
+
+
+    findUserByUid = async (userid) => {
+        if (userid) {
+            const db = getFirestore();
+            const usersCollection = doc(db, "users", userid);
+            console.log(userid);
+    
+            // Return a promise that resolves to the first_name
+            return getDoc(usersCollection)
+                .then((docSnapshot) => {
+                    if (docSnapshot.exists()) {
+                        const documentData = docSnapshot.data();
+                        console.log("Document data:", documentData.first_name);
+                        return documentData.first_name;
+                    } else {
+                        console.log("Document does not exist.");
+                        return null; // You can return null or handle this case as needed
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error getting document:", error);
+                    throw error; // Propagate the error
+                });
+        } else {
+            // Handle the case where the user is not authenticated
+            console.error("User is not authenticated");
+            return null; // You can return null or handle this case as needed
+        }
+    };
+    
+
+
 
 
 

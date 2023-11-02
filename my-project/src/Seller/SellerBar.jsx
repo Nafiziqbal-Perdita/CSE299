@@ -62,6 +62,21 @@ const SellerBar = ({ currentPage, changePage, LogOut }) => {
             Chat
           </ul>
 
+          <ul
+            className={
+              currentPage === "soldItem" ? "text-blue-500" : "text-gray-500"
+            }
+            onClick={() => {
+              return changePage("soldItem");
+            }}
+          >
+            Sold Item
+          </ul>
+
+
+
+
+
 
         </div>
 

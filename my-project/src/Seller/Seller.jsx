@@ -7,6 +7,7 @@ import MyProduct from "./MyProduct";
 import SellerHome from "./SellerHome";
 import Post from "./Post";
 import ChatHome from "../Chat Application/ChatHome";
+import MySold from "./SoldItems/MySold";
 const Seller = () => {
   // state
   const [go, setGo] = useState(false);
@@ -54,9 +55,19 @@ const Seller = () => {
           <Post changePage={changePage} />
         ) : currentPage === "chatRoom" ? (
           <ChatHome />
-        ) : (
-          <SellerHome />
-        )}
+        ) : currentPage === "soldItem" ? (
+
+
+          <MySold />
+
+
+        ) :
+
+
+
+          (
+            <SellerHome />
+          )}
       </div>
     </>
   );

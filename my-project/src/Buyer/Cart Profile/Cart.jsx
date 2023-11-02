@@ -105,7 +105,7 @@ const Cart = ({
     <>
       <>
         <div
-          className=" bg-gray-200   h-28 w-2/3 flex items-center justify-between py-2 px-2 rounded-lg shadow-md
+          className="  bg-gray-200   h-28 w-5/6 flex items-center justify-between py-2 px-2 rounded-lg shadow-md
         hover:scale-95 hover:duration-500 
         "
         >

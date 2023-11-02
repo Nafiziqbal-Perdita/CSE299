@@ -4,6 +4,7 @@ import { auth } from "../FireBase/FireComp";
 import { Navigate, useNavigate } from "react-router-dom";
 import Products from "./Product DIrectory/Products";
 import BuyerBar from "./BuyerBar";
+import carousoul from "./Carosoul/carosoul";
 const Buyer = () => {
   const [go, setGo] = useState(false);
 
@@ -34,11 +35,13 @@ const Buyer = () => {
 
   return (
     <>
- 
-      <BuyerBar  logOut={LogOut} cart={goCart} />
+      <BuyerBar logOut={LogOut} cart={goCart} />
+
+
 
 
       <div>
+    
         <Products buyerId={userid} />
       </div>
     </>
