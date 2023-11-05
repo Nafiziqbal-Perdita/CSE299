@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import chatClass from "./chatClass";
 import { useAuth } from "../FireBase/Authentication/AuthContext";
@@ -11,8 +11,15 @@ const Messenger = () => {
     const [count, setCount] = useState(0);
     const [message, setMessage] = useState([]);
     const [refresh, setRefresh] = useState(false);
+
+
+    const chatContainerRef=useRef(null);
+
+
+
+
     const location = useLocation();
-    const { roomId } = location.state;
+    const { roomId,name } = location.state;
     console.log(roomId);
 
     const chat = new chatClass();
@@ -68,6 +75,7 @@ const Messenger = () => {
             fromCount: false,
 
             toCount: false,
+            lastTime: serverTimestamp(),
         };
 
         if (myType === "seller") {
@@ -75,12 +83,14 @@ const Messenger = () => {
                 fromCount: false,
 
                 toCount: true,
+                lastTime: serverTimestamp(),
             };
         } else {
             data = {
                 fromCount: false,
 
                 toCount: true,
+                lastTime: serverTimestamp(),
             };
         }
 
@@ -178,14 +188,27 @@ const Messenger = () => {
     }, []);
 
 
+
+
+// Add a useEffect hook to scroll to the bottom when messages change
+useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [message]); // Ensure this effect runs whenever the message state changes
+
+
+
+
+
     return (
         <>
-            <div className="">
+            <div className="  m-2" ref={chatContainerRef} >
 
 
 
 
-                <div className="container flex items-center justify-center  bg-white mx-auto">
+                <div className="container shadow-md flex items-center justify-center  bg-white mx-auto">
                     <div className="max-w-2xl w-2/3  border rounded">
                         <div>
                             <div className="w-full">
@@ -226,11 +249,11 @@ const Messenger = () => {
                                         alt="username"
                                     />
                                     <span className="block ml-2 font-bold text-gray-600">
-                                        Mr. Perfect
+                                     {name}
                                     </span>
 
                                 </div>
-                                <div className="relative w-full p-6 overflow-y-auto h-[30rem]">
+                                <div className="relative bg-white w-full p-6 overflow-y-auto h-[30rem]"   ref={chatContainerRef}   >
                                     <ul className="space-y-2 flex flex-col ">
 
 
@@ -276,7 +299,7 @@ const Messenger = () => {
                                     </ul>
                                 </div>
 
-                                <div className="flex bg-yellow-400 items-center justify-between w-full p-3 border-t border-gray-300">
+                                <div className="flex bg-slate-50   items-center justify-between w-full p-3 py-3 border-t border-gray-300">
                                     <button>
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -297,7 +320,7 @@ const Messenger = () => {
                                     <input
                                         type="text"
                                         placeholder="Message"
-                                        className="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700"
+                                        className="block w-full py-2 pl-4 mx-3 bg-white  border border-slate-300 rounded-full outline-none focus:text-gray-700"
                                         name="message"
                                         value={text}
                                         onChange={(e) => {
@@ -314,7 +337,7 @@ const Messenger = () => {
                                         }}
                                     >
                                         <svg
-                                            className="w-5 h-5 text-gray-500 origin-center transform rotate-90"
+                                            className="w-5 h-5 text-gray-500 hover:text-gray-800 origin-center transform rotate-90"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 0 20 20"
                                             fill="currentColor"

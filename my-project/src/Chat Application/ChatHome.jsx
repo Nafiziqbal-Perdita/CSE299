@@ -7,6 +7,8 @@ import SellerBar from "../Seller/SellerBar";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../FireBase/FireComp";
 
+import { ClockLoader } from 'react-spinners'
+
 const ChatHome = () => {
   const [room, setRoom] = useState([]);
   const [type, setType] = useState("");
@@ -53,6 +55,9 @@ const ChatHome = () => {
 
   return (
     <>
+
+
+
       <div className="bg-slate-50 h-screen  flex items-center justify-center ">
         <div className="bg-white  h-5/6 w-5/6 ">
           <div className="bg-slate-100 h-14 m-1 p-1 rounded-xl flex items-center justify-between shadow-md ">
@@ -92,6 +97,7 @@ const ChatHome = () => {
                     roomId={e.roomId}
                     name={e.toName}
                     time={e.lastTime}
+                    message={e.toCount}
                   />
                 ))
               : type === "buyer"
@@ -103,9 +109,21 @@ const ChatHome = () => {
                       roomId={e.roomId}
                       name={e.fromName}
                       time={e.lastTime}
+                      message={e.fromCount}
                     />
                   ))
-                : "Loading"
+                : (
+
+
+
+                  <div  className="flex items-top p-5 justify-center h-full w-full" > 
+
+                    <ClockLoader  speedMultiplier={3}  color="#36d7b7" />
+
+
+                  </div>
+
+                )
           }
           {/* Add debug logs */}
           {console.log("Type:", type)}

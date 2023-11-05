@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const ChatCart = ({ time, name, roomId }) => {
+const ChatCart = ({ time, name, roomId, message }) => {
 
 
 
@@ -27,7 +27,8 @@ const ChatCart = ({ time, name, roomId }) => {
         navigate('/chat',
             {
                 state: {
-                    roomId
+                    roomId,
+                    name
                 }
             }
 
@@ -51,7 +52,7 @@ const ChatCart = ({ time, name, roomId }) => {
                 }}
 
 
-                className="bg-cyan-100 py-2 px-4 m-2 rounded-lg flex items-center justify-between ">
+                className="bg-slate-100 shadow-md  py-2 px-4 m-2 rounded-lg flex items-center justify-between ">
 
 
                 <div className="h-16  rounded-full  " >
@@ -66,18 +67,41 @@ const ChatCart = ({ time, name, roomId }) => {
                 </div>
 
                 <div>
-                    {name}
-                </div>
-
+                    
+                    
                 <div>
+                        <span className={`text-lg font-mono  ${message?"font-extrabold":"font-extralight"}  `} >
+                            {name}
+                        </span>
+                    </div>
 
-
-                    {
-                        formattedDate
-                    }
 
 
                 </div>
+
+                <div className="flex items-center justify-center">
+
+                    <div>
+                        <span className={`text-sm font-mono  ${message?"font-extrabold":"font-extralight"}  `} >
+                            {formattedDate}
+                        </span>
+                    </div>
+
+
+
+                    <div className="h-6">
+                        <svg
+
+                            className="h-full"
+                            width="128" height="128" viewBox="-2 -2 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path fill={`#${message?"ef4444":"22c55e"} `} d="M3 .565h14a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-6.958l-6.444 4.808A1 1 0 0 1 2 18.57v-4.006a2 2 0 0 1-2-2v-9a3 3 0 0 1 3-3z" />
+                        </svg>
+                    </div>
+
+
+                </div>
+
+
 
 
             </div>
