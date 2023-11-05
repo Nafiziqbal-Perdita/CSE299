@@ -2,11 +2,11 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../FireBase/Authentication/AuthContext";
 import { auth } from "../FireBase/FireComp";
 import { useEffect, useState } from "react";
-
+import { ScaleLoader } from 'react-spinners'
 import { getFirestore, setDoc, doc } from "firebase/firestore";
 
 export default function Registration() {
-  const { registerWithMailPass, setEmail, setPass, setUserid } = useAuth();
+  const { registerWithMailPass, setEmail, setPass, setUserid, forgetPassword, error, setError } = useAuth();
   //states
   const [go, setGo] = useState(false);
   const [type, setType] = useState("buyer");
@@ -14,6 +14,7 @@ export default function Registration() {
   const [last_name, setLast_name] = useState("");
   const [description, setDescription] = useState("");
   const [eye, setEye] = useState(false);
+  const [load, setLoad] = useState(false);
 
 
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ export default function Registration() {
   const checked = async (e) => {
 
     e.preventDefault();
+    setLoad(true);
+
 
     await registerWithMailPass();
     const user = auth.currentUser;
@@ -57,6 +60,18 @@ export default function Registration() {
     console.log(first_name);
     console.log(last_name);
     console.log(description);
+
+
+
+    setEmail('');
+    setPass('');
+    setLoad(false);
+
+
+
+
+
+
   };
 
   useEffect(() => {
@@ -67,6 +82,20 @@ export default function Registration() {
       setUserid(user.uid);
     }
   });
+
+
+
+
+  const forgetPass = async () => {
+    setLoad(true);
+
+    await forgetPassword();
+    setLoad(false);
+
+  }
+
+
+
 
   // Detailed related works
 
@@ -97,6 +126,7 @@ export default function Registration() {
 
 
                 onChange={(e) => {
+                  setError('');
 
                   setEmail(e.target.value);
 
@@ -113,6 +143,7 @@ export default function Registration() {
 
                   onChange={(e) => {
 
+                    setError('');
                     setPass(e.target.value);
 
                   }}
@@ -172,13 +203,38 @@ export default function Registration() {
 
 
               >
-                Register
+                {load ? (
+
+                  <div className=" flex items-center justify-center">
+
+                    <ScaleLoader color="#ffffff" />
+
+                  </div>
+                ) : "Register"}
+
               </button>
             </form>
 
-            <div className="mt-2 text-xs border-b border-[#002D74] py-4 text-[#002D74]">
+            <div className="mt-2 text-xs border-b border-[#002D74] py-4 text-[#002D74]"
+
+              onClick={() => {
+                return forgetPass();
+              }}
+
+            >
               <a href="#">Forgot your password?</a>
             </div>
+
+
+
+            <div className="mt-1 text-xs   py-2 text-[#d64949]"   >
+              <a href="#">
+
+                {error}
+              </a>
+            </div>
+
+
 
             <div className="mt-3 text-xs flex justify-between items-center text-[#002D74]">
               <p>Have an account?</p>

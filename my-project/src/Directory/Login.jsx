@@ -4,14 +4,16 @@ import { auth } from "../FireBase/FireComp";
 import { useEffect, useState } from "react";
 
 import LogInPic from '../assets/loginPic.svg'
+import {ScaleLoader } from 'react-spinners'
 
 
 const LogIn = () => {
-  const { signInwithMailPass, setEmail, setPass, setUserid, userid } =
+  const { signInwithMailPass, setEmail, setPass, setUserid, userid, forgetPassword, error, setError } =
     useAuth();
 
   const [go, setGo] = useState(false);
   const [eye, setEye] = useState(false);
+  const [load, setLoad] = useState(false);
 
 
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ const LogIn = () => {
 
   const checked = async (e) => {
     e.preventDefault();
+    setLoad(true);
     console.log('Checking...');
     await signInwithMailPass();
     const user = auth.currentUser;
@@ -27,6 +30,12 @@ const LogIn = () => {
       setGo(true);
       setUserid(user.uid);
     }
+
+
+    setEmail('');
+    setPass('');
+
+    setLoad(false);
   };
 
   useEffect(() => {
@@ -38,6 +47,16 @@ const LogIn = () => {
       setUserid(user.uid);
     }
   });
+
+
+
+  const forgetPass = async () => {
+    setLoad(true);
+
+    await forgetPassword();
+    setLoad(false);
+
+  }
 
   console.log(go);
   console.log("current", userid);
@@ -69,6 +88,8 @@ const LogIn = () => {
                 onChange={(e) => {
 
                   setEmail(e.target.value);
+                  setError("");
+
 
                 }}
 
@@ -84,6 +105,8 @@ const LogIn = () => {
                   onChange={(e) => {
 
                     setPass(e.target.value);
+                    setError("");
+
 
                   }}
 
@@ -114,13 +137,50 @@ const LogIn = () => {
                 onClick={checked}
 
               >
-                Login
+
+
+                {load ? (
+
+                  <div className=" flex items-center justify-center">
+
+                    <ScaleLoader  color="#ffffff" />
+
+                  </div>
+                ) : "Login"}
+
+
               </button>
             </form>
 
-            <div className="mt-2 text-xs border-b border-[#002D74] py-4 text-[#002D74]">
+            <div className="mt-2 text-xs border-b border-[#002D74] py-4 text-[#002D74]"
+
+              onClick={() => {
+
+
+
+                console.log("click");
+                return forgetPass();
+
+              }}
+
+            >
               <a href="#">Forgot your password?</a>
             </div>
+
+
+
+
+
+
+
+            <div className="mt-1 text-xs   py-2 text-[#d64949]"   >
+              <a href="#">
+
+                {error}
+              </a>
+            </div>
+
+
 
             <div className="mt-3 text-xs flex justify-between items-center text-[#002D74]">
               <p>Don't have an account?</p>
@@ -144,7 +204,7 @@ const LogIn = () => {
 
 
 
-          <img
+            <img
               className="rounded-2xl"
               src="https://images.unsplash.com/photo-1616606103915-dea7be788566?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1887&q=80"
             />

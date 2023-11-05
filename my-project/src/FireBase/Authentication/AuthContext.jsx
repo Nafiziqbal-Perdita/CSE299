@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { auth } from "../FireComp.jsx";
 import {
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
@@ -17,6 +18,7 @@ export const AuthProvider = ({ children }) => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [userid, setUserid] = useState("null");
+  const [error,setError]=useState('');
 
   //getting the current logged in person user id
 
@@ -31,6 +33,17 @@ export const AuthProvider = ({ children }) => {
   //functions
   //Registration a user using email and password
   const registerWithMailPass = async () => {
+
+    if (email===""){
+      setError('Please put a valid Email');
+      return;
+    }
+    if (pass===""){
+      setError('Insert atleast six digit password');
+      return;
+    }
+
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -49,9 +62,18 @@ export const AuthProvider = ({ children }) => {
 
   const signInwithMailPass = async () => {
 
+    if (email===""){
+      setError('Please put a valid Email');
+      return;
+    }
+    if (pass===""){
+      setError('Insert a valid Password');
+      return;
+    }
 
-    console.log(email);
-    console.log(pass);
+
+    // console.log(email);
+    // console.log(pass);
 
 
     try {
@@ -96,7 +118,24 @@ export const AuthProvider = ({ children }) => {
 
   }
 
+  const forgetPassword = async () => {
+    if (email===""){
+      setError('Please insert your Email');
+      return;
+    }
+  
 
+
+    try {
+      
+      await sendPasswordResetEmail(auth, email);
+    
+      console.log("Reset email send");
+    } catch (error) {
+      console.log(error);
+    
+    }
+  };
 
   const value = {
     getCurrentUser,
@@ -110,6 +149,9 @@ export const AuthProvider = ({ children }) => {
     setPass,
     userid,
     setUserid,
+    forgetPassword,
+    error,
+    setError
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
