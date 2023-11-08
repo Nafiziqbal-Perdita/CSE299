@@ -1,9 +1,6 @@
 import { getDatabase, ref, push, get, remove, update } from "firebase/database";
 
 class CartManager {
-
-
-
   //addition of a collection in to the database
   addToCart = async (newCart, user) => {
     let isAdded = false;
@@ -41,7 +38,6 @@ class CartManager {
             if (cartItem.buyer_id === user) {
               isAdded = true;
             }
-
           }
         }
       }
@@ -66,44 +62,25 @@ class CartManager {
 
   //update a value of the cart data
 
-
-
-
-
-
   updateCartQuan = async (obj, path) => {
-
     const pathToData = `myCart/${path}`;
-
-
 
     const db = getDatabase();
     const dbRef = ref(db, pathToData);
 
-    update(dbRef, obj).then(() => {
-      console.log('Data updated successfully');
-    }).catch((error) => {
-      console.error('Error updating data: ', error);
-    });
-
-
-
-  }
-
-
-
-
-
-
+    update(dbRef, obj)
+      .then(() => {
+        console.log("Data updated successfully");
+      })
+      .catch((error) => {
+        console.error("Error updating data: ", error);
+      });
+  };
 
   // Deletion of a specific colleciton from the database
 
   deleteFromCart = async (path) => {
-
-
     const pathToData = `myCart/${path}`;
-
-
 
     const db = getDatabase();
     const dataRef = ref(db, pathToData);
@@ -115,17 +92,7 @@ class CartManager {
       .catch((error) => {
         console.error("Error deleting collection: ", error);
       });
-
-
-  }
-
-
-
-
-
-
-
-
+  };
 }
 
 export default CartManager;

@@ -36,7 +36,7 @@ const MainComment = ({ product_id }) => {
     callData();
   }, []);
 
-  useEffect(()=>{},[commentsData]);
+  useEffect(() => {}, [commentsData]);
 
   console.log("MainComment");
 
@@ -68,35 +68,33 @@ const MainComment = ({ product_id }) => {
     saveInFireBase();
   };
 
-  console.log('Rendering Comment');
+  console.log("Rendering Comment");
 
-if (commentsData!=null){
-    
-  return (
-    <div className="App">
-      <Comment
-        handleInsertNode={handleInsertNode}
-        handleEditNode={handleEditNode}
-        handleDeleteNode={handleDeleteNode}
-        comment={commentsData}
-      />
-    </div>
-  );
-}else{
+  if (commentsData != null) {
+    return (
+      <div className="App">
+        <Comment
+          handleInsertNode={handleInsertNode}
+          handleEditNode={handleEditNode}
+          handleDeleteNode={handleDeleteNode}
+          comment={commentsData}
+        />
+      </div>
+    );
+  } else {
     setCommentsData(comments);
-    
-  return (
-    <div className="App">
-      <Comment
-        handleInsertNode={handleInsertNode}
-        handleEditNode={handleEditNode}
-        handleDeleteNode={handleDeleteNode}
-        comment={commentsData}
-      />
-    </div>
-  );
-}
 
+    return (
+      <div className="App">
+        <Comment
+          handleInsertNode={handleInsertNode}
+          handleEditNode={handleEditNode}
+          handleDeleteNode={handleDeleteNode}
+          comment={commentsData}
+        />
+      </div>
+    );
+  }
 };
 
 export default MainComment;

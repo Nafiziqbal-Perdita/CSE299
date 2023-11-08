@@ -152,11 +152,7 @@ const Product = ({
           className={`m-4 p-2 rounded-xl  bg-white h-72 w-52 flex flex-col justify-evenly border-t-2 ${
             avail ? "border-green-500" : "border-red-400"
           } hover:cursor-progress `}
-
-
           onClick={handleDetails}
-
-
         >
           <div className=" h-2/3 ">
             <img src={image} alt={name} />

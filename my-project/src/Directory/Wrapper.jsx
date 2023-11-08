@@ -11,42 +11,23 @@ const Wrapper = () => {
   const [data, setData] = useState([]);
   const [type, setType] = useState({});
 
-
-
-
-
   const nowType = (data) => {
-
     const myUser = auth.currentUser.uid;
-
-
 
     console.log("in the type", data);
 
     console.log("in the type user", myUser);
 
     data.forEach((doc) => {
-
       if (myUser === doc.id) {
-        console.log('Got id');
+        console.log("Got id");
         // console.log(doc.id);
         console.log(doc.type);
 
         goNavigate(doc.type);
-
       }
-
-    })
-
-
-
-
-
-
-
-  }
-
-
+    });
+  };
 
   const fetchData = async () => {
     const db = getFirestore();
@@ -59,9 +40,7 @@ const Wrapper = () => {
           id: doc.id,
           ...doc.data(),
         });
-      }
-
-      );
+      });
 
       await nowType(userData);
 
@@ -70,7 +49,6 @@ const Wrapper = () => {
       console.error("Error fetching data: ", error);
     }
   };
-
 
   const callEveryOne = () => {
     (async () => {
@@ -88,42 +66,22 @@ const Wrapper = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-
-
-
   const navigate = useNavigate();
 
   const goNavigate = (type) => {
-
-
-    if (type === 'seller') {
-      navigate('/Seller');
+    if (type === "seller") {
+      navigate("/Seller");
     } else {
-      navigate('/Buyer');
+      navigate("/Buyer");
     }
-
-
-
-
-  }
-
-
-
-
-
-
+  };
 
   return (
     <>
-
       <div className="h-screen w-screen flex justify-center items-center">
-
-
         <div>
           <BounceLoader color="#36d7b7" size={150} />
         </div>
-
-
       </div>
     </>
   );

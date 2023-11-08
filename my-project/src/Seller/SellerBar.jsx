@@ -4,7 +4,6 @@ import account from "../assets/account.svg";
 import logout from "../assets/logout.svg";
 
 const SellerBar = ({ currentPage, changePage, LogOut }) => {
-
   const navigate = useNavigate();
 
   return (
@@ -50,7 +49,6 @@ const SellerBar = ({ currentPage, changePage, LogOut }) => {
             Create Post
           </ul>
 
-
           <ul
             className={
               currentPage === "chatRoom" ? "text-blue-500" : "text-gray-500"
@@ -72,32 +70,21 @@ const SellerBar = ({ currentPage, changePage, LogOut }) => {
           >
             Sold Item
           </ul>
-
-
-
-
-
-
         </div>
 
         <div className="flex space-x-4 p-2 justify-center items-center">
-          <div className="h-10 hover:scale-90 hover:duration-500"
-
+          <div
+            className="h-10 hover:scale-90 hover:duration-500"
             onClick={() => {
-
               navigate("/account", {
                 state: {
                   userid: auth.currentUser.uid,
                   mail: auth.currentUser.email,
                 },
               });
-
             }}
-
-
           >
             <img className="h-full" src={account} alt="Account" />
-
           </div>
 
           <div

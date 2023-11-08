@@ -56,18 +56,10 @@ const Seller = () => {
         ) : currentPage === "chatRoom" ? (
           <ChatHome />
         ) : currentPage === "soldItem" ? (
-
-
           <MySold />
-
-
-        ) :
-
-
-
-          (
-            <SellerHome />
-          )}
+        ) : (
+          <SellerHome />
+        )}
       </div>
     </>
   );

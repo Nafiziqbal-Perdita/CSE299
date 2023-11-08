@@ -2,11 +2,19 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../FireBase/Authentication/AuthContext";
 import { auth } from "../FireBase/FireComp";
 import { useEffect, useState } from "react";
-import { ScaleLoader } from 'react-spinners'
+import { ScaleLoader } from "react-spinners";
 import { getFirestore, setDoc, doc } from "firebase/firestore";
 
 export default function Registration() {
-  const { registerWithMailPass, setEmail, setPass, setUserid, forgetPassword, error, setError } = useAuth();
+  const {
+    registerWithMailPass,
+    setEmail,
+    setPass,
+    setUserid,
+    forgetPassword,
+    error,
+    setError,
+  } = useAuth();
   //states
   const [go, setGo] = useState(false);
   const [type, setType] = useState("buyer");
@@ -16,16 +24,12 @@ export default function Registration() {
   const [eye, setEye] = useState(false);
   const [load, setLoad] = useState(false);
 
-
   const navigate = useNavigate();
-
 
   //if signed in then it will navigate to the home directory
   const checked = async (e) => {
-
     e.preventDefault();
     setLoad(true);
-
 
     await registerWithMailPass();
     const user = auth.currentUser;
@@ -61,17 +65,9 @@ export default function Registration() {
     console.log(last_name);
     console.log(description);
 
-
-
-    setEmail('');
-    setPass('');
+    setEmail("");
+    setPass("");
     setLoad(false);
-
-
-
-
-
-
   };
 
   useEffect(() => {
@@ -83,19 +79,12 @@ export default function Registration() {
     }
   });
 
-
-
-
   const forgetPass = async () => {
     setLoad(true);
 
     await forgetPassword();
     setLoad(false);
-
-  }
-
-
-
+  };
 
   // Detailed related works
 
@@ -123,16 +112,11 @@ export default function Registration() {
                 type="email"
                 name="email"
                 placeholder="Email"
-
-
                 onChange={(e) => {
-                  setError('');
+                  setError("");
 
                   setEmail(e.target.value);
-
                 }}
-
-
               />
               <div className="relative">
                 <input
@@ -140,16 +124,10 @@ export default function Registration() {
                   type={eye ? "text" : "password"}
                   name="password"
                   placeholder="Password"
-
                   onChange={(e) => {
-
-                    setError('');
+                    setError("");
                     setPass(e.target.value);
-
                   }}
-
-
-
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -159,20 +137,16 @@ export default function Registration() {
                   className="bi bi-eye absolute top-1/2 right-3 -translate-y-1/2 "
                   viewBox="0 0 16 16"
                   onClick={() => {
-
                     setEye(!eye);
                   }}
-
                 >
                   <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
                   <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
                 </svg>
               </div>
 
-
               <div className="bg-gray-200 p-2 rounded-md ">
-
-                <label className="ml-1 font-serif " >Buyer</label>
+                <label className="ml-1 font-serif ">Buyer</label>
                 <input
                   className="ml-2"
                   type="radio"
@@ -181,7 +155,7 @@ export default function Registration() {
                   checked={type === "buyer"}
                   onChange={(e) => setType(e.target.value)}
                 />
-                <label className="ml-3 font-serif" >Seller</label>
+                <label className="ml-3 font-serif">Seller</label>
                 <input
                   className="ml-2"
                   type="radio"
@@ -190,63 +164,43 @@ export default function Registration() {
                   checked={type === "seller"}
                   onChange={(e) => setType(e.target.value)}
                 />{" "}
-
               </div>
-
-
-
 
               <button
                 className="bg-[#002D74] rounded-xl text-white py-2 hover:scale-105 duration-300"
-
                 onClick={checked}
-
-
               >
                 {load ? (
-
                   <div className=" flex items-center justify-center">
-
                     <ScaleLoader color="#ffffff" />
-
                   </div>
-                ) : "Register"}
-
+                ) : (
+                  "Register"
+                )}
               </button>
             </form>
 
-            <div className="mt-2 text-xs border-b border-[#002D74] py-4 text-[#002D74]"
-
+            <div
+              className="mt-2 text-xs border-b border-[#002D74] py-4 text-[#002D74]"
               onClick={() => {
                 return forgetPass();
               }}
-
             >
               <a href="#">Forgot your password?</a>
             </div>
 
-
-
-            <div className="mt-1 text-xs   py-2 text-[#d64949]"   >
-              <a href="#">
-
-                {error}
-              </a>
+            <div className="mt-1 text-xs   py-2 text-[#d64949]">
+              <a href="#">{error}</a>
             </div>
-
-
 
             <div className="mt-3 text-xs flex justify-between items-center text-[#002D74]">
               <p>Have an account?</p>
               <button
-
                 className="py-2 px-5 bg-white border rounded-xl hover:scale-110 duration-300"
-
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate("/Login", {})
+                  navigate("/Login", {});
                 }}
-
               >
                 Login
               </button>

@@ -37,11 +37,7 @@ const Buyer = () => {
     <>
       <BuyerBar logOut={LogOut} cart={goCart} />
 
-
-
-
       <div>
-    
         <Products buyerId={userid} />
       </div>
     </>

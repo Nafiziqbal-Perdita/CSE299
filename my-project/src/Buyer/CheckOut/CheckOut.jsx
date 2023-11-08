@@ -60,7 +60,7 @@ const CheckOut = () => {
     sendMail();
     removeFromCart();
 
-    console.log('navigate buyer');
+    console.log("navigate buyer");
     navigate("/Buyer");
   };
 
@@ -84,11 +84,7 @@ const CheckOut = () => {
         image: e.product_image,
         creator_id: e.creator_id,
         buyer_data: [userData],
-        createdAt: serverTimestamp()
-
-
-
-
+        createdAt: serverTimestamp(),
       };
 
       console.log(ob); // Log the object
@@ -111,7 +107,7 @@ const CheckOut = () => {
     <>
       <div className="flex flex-col items-center border-b bg-white py-4 sm:flex-row sm:px-10 lg:px-20 xl:px-32">
         <a href="#" className="text-2xl font-bold text-gray-800">
-          sneekpeeks
+          Far To Farm
         </a>
         <div className="mt-4 py-2 text-xs sm:mt-0 sm:ml-auto sm:text-base">
           <div className="relative">

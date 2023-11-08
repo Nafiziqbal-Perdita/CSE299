@@ -26,9 +26,7 @@ const Post = ({ changePage }) => {
 
   // Function to create a post
   const createPost = async (e) => {
-
     e.preventDefault();
-
 
     if (!userid || userid === "null") {
       console.error("User ID is invalid.");
@@ -90,8 +88,8 @@ const Post = ({ changePage }) => {
             creator_id: userid,
             product_name: pname,
             price: pprice,
-            description: pdesc, 
-            category:catagory,
+            description: pdesc,
+            category: catagory,
             stock: true,
           });
 

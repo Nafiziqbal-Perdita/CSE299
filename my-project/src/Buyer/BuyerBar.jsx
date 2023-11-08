@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../FireBase/FireComp";
 
 const BuyerBar = ({ logOut, cart }) => {
-
   const navigate = useNavigate();
 
   return (
@@ -38,55 +37,38 @@ const BuyerBar = ({ logOut, cart }) => {
             <img className="h-full p-2" src={cartPic} alt="" />
           </ul>
 
-
-          <div className="h-10 w-10"
-
-
-
-
+          <div
+            className="h-10 w-10"
             onClick={() => {
-
-              navigate(
-                '/chatRoom'
-              )
-
-
+              navigate("/chatRoom");
             }}
-
-
           >
-
             <svg
-
               className="h-full w-full p-1"
-
-              width="64" height="64" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#0ea5e9" d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM7 9h10c.55 0 1 .45 1 1s-.45 1-1 1H7c-.55 0-1-.45-1-1s.45-1 1-1zm6 5H7c-.55 0-1-.45-1-1s.45-1 1-1h6c.55 0 1 .45 1 1s-.45 1-1 1zm4-6H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1z" />
+              width="64"
+              height="64"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill="#0ea5e9"
+                d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM7 9h10c.55 0 1 .45 1 1s-.45 1-1 1H7c-.55 0-1-.45-1-1s.45-1 1-1zm6 5H7c-.55 0-1-.45-1-1s.45-1 1-1h6c.55 0 1 .45 1 1s-.45 1-1 1zm4-6H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1z"
+              />
             </svg>
-
-
-
           </div>
-
-
-
         </div>
 
         <div className="flex space-x-4 p-2 justify-center items-center">
-          <div className="h-10 hover:scale-90 hover:duration-500"
-
+          <div
+            className="h-10 hover:scale-90 hover:duration-500"
             onClick={() => {
-
               navigate("/account", {
                 state: {
                   userid: auth.currentUser.uid,
-                  mail:auth.currentUser.email,
+                  mail: auth.currentUser.email,
                 },
               });
-
-
             }}
-
           >
             <img className="h-full" src={account} alt="Account" />
           </div>
